@@ -16,7 +16,7 @@ if 'ideas_data' not in st.session_state:
         st.stop()
 
 # Sidebar with AWS logo and enhanced styling
-aws_logo_path = "AWS.png"  # Path to the logo image in the same directory as main.py
+aws_logo_path = "AWS.jpeg"  # Path to the logo image in the same directory as main.py
 st.sidebar.image(aws_logo_path, width=130)
 
 # Adding some padding between elements for a better visual
