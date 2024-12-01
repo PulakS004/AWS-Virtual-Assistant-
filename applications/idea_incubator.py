@@ -4,7 +4,7 @@ import streamlit as st
 from PIL import Image
 
 # Define the CSV file path
-CSV_FILE = 'data/ideas.csv'  # Path to your CSV file
+CSV_FILE = "idea_incubator_data\ideas.csv"  # Path to your CSV file
 
 # Load data from CSV and store it in session state if not already done
 if 'ideas_data' not in st.session_state:
