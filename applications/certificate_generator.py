@@ -6,6 +6,10 @@ from reportlab.lib.utils import ImageReader
 from io import BytesIO
 from PIL import Image
 
+def render():
+    st.header("Certificate Generator")
+    st.write("This feature helps you generate certificates for event participants.")
+
 # Function to generate certificate
 def generate_certificate(name, lastname, template_path):
     # Load the certificate template

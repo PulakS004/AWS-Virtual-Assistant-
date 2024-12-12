@@ -1,5 +1,10 @@
 import streamlit as st
 import datetime
+
+def render():
+    st.header("Event Countdown and Calendar")
+    st.write("This feature helps you stay up to date with recent events.")
+
 if 'events' not in st.session_state:
     
     st.session_state.events=[

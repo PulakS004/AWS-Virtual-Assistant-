@@ -3,6 +3,11 @@ import matplotlib.pyplot as plt
 import streamlit as st
 from PIL import Image
 
+def render():
+    st.header("Idea Incubator and Voting Platform")
+    st.write("This feature helps you suggest ideas for events, projects and workshops and vote on them.")
+
+
 # Define the CSV file path
 CSV_FILE = "idea_incubator_data\ideas.csv"  # Path to your CSV file
 

@@ -2,6 +2,11 @@ import streamlit as st
 import pandas as pd
 import os
 
+def render():
+    st.header("Registration tracker")
+    st.write("This feature helps you track participants in a particular AWS Club event.")
+
+
 # Step 1: Define the CSV file path
 CSV_FILE = "registrations.csv"
 
@@ -44,7 +49,7 @@ def filter_data(event_name):
     return df
 
 # Page Configuration
-st.set_page_config(page_title="Event Registration", page_icon="📋", layout="wide")
+#st.set_page_config(page_title="Event Registration", page_icon="📋", layout="wide")
 
 # Registration Page
 st.title("Event Registration Portal")

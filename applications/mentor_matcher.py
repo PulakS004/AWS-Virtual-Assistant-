@@ -7,6 +7,11 @@ Original file is located at
     https://colab.research.google.com/drive/12mKen8V8UQH6UcQ7d7jSUtOFeVt3ojqI
 """
 
+def render():
+    st.header("Mentor matcher")
+    st.write("This feature helps mentees find mentors based on their technical skills and the project they wish to work on.")
+
+
 import pandas as pd
 import streamlit as st
 from sklearn.feature_extraction.text import TfidfVectorizer
