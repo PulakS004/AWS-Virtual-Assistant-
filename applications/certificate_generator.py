@@ -6,10 +6,6 @@ from reportlab.lib.utils import ImageReader
 from io import BytesIO
 from PIL import Image
 
-def render():
-    st.header("Certificate Generator")
-    st.write("This feature helps you generate certificates for event participants.")
-
 # Function to generate certificate
 def generate_certificate(name, lastname, template_path):
     # Load the certificate template
@@ -23,19 +19,18 @@ def generate_certificate(name, lastname, template_path):
     # Define the text properties
     font = cv2.FONT_HERSHEY_DUPLEX
     font_scale = 2.5
-    color = (255,255,255)  # White color
+    color = (255, 255, 255)  # White color
     thickness = 4
 
-    # Overlay text onto the template
-    #Handling case of missing last name
+    # Handling the case of a missing last name
     if pd.isna(lastname) or lastname.strip() == "":
-        text = f"{name}" #Use only the first name
+        text = f"{name}"  # Use only the first name
     else:
         text = f"{name} {lastname}"
     position = (680, 700)  # Adjust position based on your template
     cv2.putText(template, text, position, font, font_scale, color, thickness)
     
-    # Convert OpenCV image (BGR) to RGB for PIL(Python Imaging Library) compatibility
+    # Convert OpenCV image (BGR) to RGB for PIL compatibility
     template_rgb = cv2.cvtColor(template, cv2.COLOR_BGR2RGB)
     
     # Convert the image to a PIL Image object
@@ -68,38 +63,50 @@ if uploaded_file:
         st.error("CSV file must contain 'Name' and 'Lastname' columns.")
     else:
         if st.button("Generate Certificates"):
+            # Create a new PDF for all certificates
             pdf_bytes = BytesIO()
-
-            # Create a PDF canvas
-            pdf_canvas = canvas.Canvas(pdf_bytes)
+            pdf_canvas = canvas.Canvas(pdf_bytes, pagesize=(842.52, 595.27))  # Landscape A4 size
+            
+            # Counter for the position on the PDF (to avoid overlapping)
+            y_position = 595.27  # Start at the bottom of the page
 
             for index, row in data.iterrows():
                 name = row["Name"]
                 lastname = row["Lastname"]
-                
+
                 # Debugging log for certificate generation
                 st.write(f"Generating certificate for {name} {lastname}")
-                
+
                 # Generate certificate image
                 certificate_image_stream = generate_certificate(name, lastname, template_path)
-                
+
                 if certificate_image_stream is None:
                     continue
-                
+
                 st.write(f"Certificate image generated for {name} {lastname}")
-                
+
                 # Use ImageReader to process the image stream
                 img_reader = ImageReader(certificate_image_stream)
-                
-                # Embed in the PDF
-                pdf_canvas.drawImage(img_reader, 50, 400, width=500, height=300)
-                pdf_canvas.showPage()
 
+                # Full-page certificate in landscape
+                page_width = 842.52  # Landscape width in points
+                page_height = 595.27  # Landscape height in points
+
+                # Ensure the certificate fits within the page by adjusting the position
+                if y_position - page_height < 0:  # Start a new page if we run out of space
+                    pdf_canvas.showPage()
+                    y_position = page_height
+
+                pdf_canvas.drawImage(img_reader, 0, y_position - page_height, width=page_width, height=page_height)
+                y_position -= page_height  # Move down for the next certificate
+
+            # Finalize the PDF
             pdf_canvas.save()
-            
+
+            # Allow download of the combined PDF
             st.success("Certificates generated successfully!")
             st.download_button(
-                "Download Certificates as PDF",
+                "Download All Certificates as PDF",
                 pdf_bytes.getvalue(),
-                file_name="certificates.pdf"
+                file_name="all_certificates.pdf"
             )
